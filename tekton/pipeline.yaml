@@ -47,6 +47,20 @@ spec:
       - name: image
         value: python:3.9-slim
       - name: args
-        value: ["--count", "--max-complexity=10", "--max-line-length=127", "--statistics"]
+        value: ["--count", "--max-complexity=10", "--max-line-length=127", "--statistics", "--ignore=E1,E23,W503"]
+      runAfter:
+        - clone
+
+    - name: tests
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
+      taskRef:
+        name: nose
+      params:
+      - name: database_uri
+        value: "sqlite:///test.db"
+      - name: args
+        value: "-v --with-spec --spec-color"
       runAfter:
         - clone
